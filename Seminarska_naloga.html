@@ -1,0 +1,146 @@
+<!DOCTYPE HTML>
+<html lang="sl">
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=no'>
+    <title>ESP32 LED Nadzor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f9f9f9;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        p, li {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        .code {
+            background-color: #f0f0f0;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            overflow: auto;
+            border-left: 3px solid #3498db;
+            margin: 10px 0;
+        }
+        footer {
+            margin-top: 20px;
+            font-size: 14px;
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        .button-container {
+            margin: 20px 0;
+        }
+        .gumb {
+            background-color: #3498db;
+            padding: 10px 20px;
+            color: white;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        .gumb:hover, .gumb.on {
+            background-color: #2980b9;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ESP32 Nadzor LED - Seminarska Naloga IOTDISIA</h1>
+        <h1>Izdelal: Rolando Kumlanc</h1>
+        <img src="https://www.electronicwings.com/storage/PlatformSection/TopicContent/421/icon/ESP32%20Interduction%20Banner%20Image.jpg" alt="ESP32 Module">
+
+        <h2>Opis Naloge in Sistem</h2>
+        <p>Razvijte uporabniški vmesnik za kontroliranje štirih LED diod na dveh različnih modulih ESP32. Uporabniški vmesnik naj bo posredovan klientu iz Ubuntu Linux strežnika. Vmesnik naj vsebuje funkcionalnosti i) vklopa in izklopa posamezne diode, ii) vklopa in izklopa obeh diod na modulih, iii) vklopa in izklopa vseh štirih diod iv) zaporednega vklopa in izklopa vseh štirih diod 1-2-3-4-1-2-3-4…
+
+            Vklop in izklop vseh štirih diod naj bo realiziran tudi s pomočjo tipke na ploščici za prototipiranje.</p>
+        <p>Za boljše razumevanje funkcionalnosti in kode sistema za nadzor LED na ESP32 modulu preko spletne strani, je tukaj opis ključnih delov sistema. Koda je razdeljena na dva glavna dela: spletni strežnik in klientska spletna stran.</p>
+
+        <h2>Zasnova Sistema</h2>
+        <h3>1. Spletni strežnik (Node.js in WebSocket)</h3>
+        <p>Uporabljajo se Node.js in Express.js za postavitev HTTP strežnika, ter WebSocket za omogočanje dvostranske komunikacije.</p>
+        <div class="code">
+            // Koda za vzpostavitev WebSocket strežnika
+        </div>
+        <p>Strežnik omogoča dinamično interakcijo z uporabnikom in ESP32 moduli, obdeluje in pošilja ukaze za upravljanje LED.</p>
+
+        <h3>2. Klientska spletna stran (HTML in JavaScript)</h3>
+        <p>Spletna stran omogoča uporabniku interaktivno nadzorovanje LED preko grafičnih gumbov.</p>
+        <div class="button-container">
+            <button id="PIN22" class='gumb' onclick='toggleLed("PIN22")'>PIN22</button>
+            <!-- Več gumbov za različne pine -->
+        </div>
+        <div class="code">
+            // JavaScript koda za upravljanje LED preko WebSocket
+        </div>
+        <p>JavaScript na strani klienta vzpostavi povezavo z WebSocket strežnikom in pošilja ter prejema ukaze in stanja LED.</p>
+
+        <h3>3. Komunikacijski Protokol</h3>
+        <p>Sporočila med klientsko stranjo in strežnikom so formatirana v JSON, kar omogoča enostavno in hitro obdelavo podatkov.</p>
+
+        <h3>4. Varnost in Zanesljivost</h3>
+        <p>WebSocket zagotavlja zanesljivo in hitro povezavo, obravnava napak pa je vgrajena v kodo za obdelavo izjem in napak v komunikaciji.</p>
+
+        <h3>5. Koda iz main.cpp</h3>
+        <p>Koda v main.cpp obravnava povezavo WiFi, vzpostavitev WebSocket povezav in upravljanje LED diod na ESP32 glede na prejete ukaze.</p>
+        <div class="code">
+            #include &lt;Arduino.h&gt;
+            #include &lt;WiFi.h&gt;
+            #include &lt;WebSocketsClient.h&gt;
+            #include &lt;ArduinoJson.h&gt;
+
+            const char* ssid = "*******";
+            const char* password = "*******";
+
+            // Določitev pinov
+            const int PIN22 = 22; const int PIN23 = 23;
+            const int PIN12 = 12; const int PIN13 = 13;
+            const int buttonPin = 5;  // Pin za gumb
+
+            void setup() {
+              Serial.begin(115200);
+              WiFi.begin(ssid, password);
+              // Več nastavitev za WiFi in WebSocket
+            }
+
+            void loop() {
+              // Obdelava sporočil in upravljanje LED
+            }
+        </div>
+
+        <footer>
+            <p>Uporabljena literatura in viri:</p>
+            <ul>
+                <li>WebSocket API dokumentacija - https://learn.microsoft.com/sl-si/windows/win32/api/_websock/</li>
+                <li>Node.js dokumentacija - https://nodejs.org/docs/latest/api/</li>
+                <li>ESP32 uradna dokumentacija - https://www.espressif.com/</li>
+                <li>Arduino dokumentacija - https://www.arduino.cc/reference/en/</li>
+                <li>ArduinoJson dokumentacija - https://arduinojson.org/v6/doc/</li>
+                <li>https://www.youtube.com/@andrejskraba</li>
+            </ul>
+        </footer>
+    </div>
+</body>
+</html>

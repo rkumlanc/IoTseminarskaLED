@@ -1,0 +1,88 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width,initial-scale=1.0,user-scalable=no'>  
+    <title>Control Interface</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin-top: 50px;
+            background: #f4f4f4;
+            color: #333;
+        }
+        h1 {
+            color: #5D5C61;
+        }
+        .button-container {
+            margin: 20px;
+        }
+        .gumb {
+            background-color: #7395AE;
+            padding: 15px 30px;
+            width: auto; /* Auto width based on content */
+            color: white;
+            font-size: 20px;
+            margin: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 10px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        .gumb:hover, .gumb.on {
+            background-color: #557A95; /* Darker shade for hover/on state */
+        }
+    </style>
+</head>
+<body>
+    <h1>ESP32 nadzor LED Seminarska naloga IoT</h1>  
+    <div class="button-container">
+        <button id="PIN22" class='gumb' onclick='toggleLed("PIN22")'>PIN22</button>
+        <button id="PIN23" class='gumb' onclick='toggleLed("PIN23")'>PIN23</button>
+        <button id="PIN12" class='gumb' onclick='toggleLed("PIN12")'>PIN12</button>
+        <button id="PIN13" class='gumb' onclick='toggleLed("PIN13")'>PIN13</button>
+        <button id="PIN22_PIN12" class='gumb' onclick='toggleLed("PIN22_PIN12")'>PIN22 & PIN12</button>
+        <button id="PIN23_PIN13" class='gumb' onclick='toggleLed("PIN23_PIN13")'>PIN23 & PIN13</button>
+        <button id="LEDvse" class='gumb' onclick='toggleLed("LEDvse")'>All</button>
+    </div>
+
+    <script type="text/javascript">
+        "use strict"; 
+        
+        let ws = new WebSocket("ws://192.168.151.144:8888"); 
+        
+        ws.onopen = function() {
+            console.log('WebSocket connection established');
+        };
+
+        ws.onerror = function(error) {
+            console.error('WebSocket Error: ', error);
+        };
+
+        ws.onmessage = function(event) {
+            console.log('Message from server: ', event.data);
+            let msg = JSON.parse(event.data);
+            console.log("Message type: " + msg.tipSporočila + ", Value: " + msg.vrednost);
+            if (msg.vrednost == 1) {
+                let buttons = document.querySelectorAll('.gumb');
+                buttons.forEach(button => button.classList.remove('on'));
+                document.getElementById(msg.pin).classList.add('on');
+            }
+        };
+
+        function toggleLed(ledId) {
+            let button = document.getElementById(ledId);
+            let state = button.classList.toggle('on');
+            let JSONsporočilo = JSON.stringify({
+                tipSporočila: "LED", 
+                pin: ledId, 
+                vrednost: state ? 1 : 0
+            });
+            console.log(JSONsporočilo);
+            ws.send(JSONsporočilo);
+        }
+    </script>
+</body>
+</html>
