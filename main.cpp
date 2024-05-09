@@ -4,8 +4,8 @@
 #include <ArduinoJson.h>
 
 // Podatki za povezavo z WiFi
-const char* ssid = "Telefonist";
-const char* password = "Kucroo123#";
+const char* ssid = "*********";
+const char* password = "********";
 
 // Nastavitve za WebSocket
 WebSocketsClient webSocket;
